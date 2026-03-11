@@ -84,9 +84,11 @@ function safeWriteToStream(stream, line) {
 
 function appendManagerLog(line) {
   try {
-    const logFile = path.join(LOG_DIR, `pm-${new Date().toISOString().slice(0, 10)}.log`);
+    const d = new Date();
+    const localDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const logFile = path.join(LOG_DIR, `pm-${localDate}.log`);
     fs.appendFileSync(logFile, line + '\n');
-  } catch (e) {}
+  } catch (e) { }
 }
 
 if (process.stdout) {
@@ -109,16 +111,16 @@ function loadServicesConfig() {
     console.log('请先运行配置向导: node sideria-pm.js setup\n');
     process.exit(1);
   }
-  
+
   try {
     const configData = fs.readFileSync(CONFIG_FILE, 'utf-8');
     const config = JSON.parse(configData);
-    
+
     // 转换配置格式为内部格式
     const services = {};
     for (const [name, svc] of Object.entries(config.services)) {
       if (!svc.enabled) continue; // 跳过禁用的服务
-      
+
       services[name] = {
         name: svc.name,
         cmd: svc.cmd,
@@ -138,7 +140,7 @@ function loadServicesConfig() {
         cleanupPorts: Array.isArray(svc.cleanupPorts) ? svc.cleanupPorts : [],
       };
     }
-    
+
     return services;
   } catch (e) {
     console.error(`✗ 加载配置失败: ${e.message}`);
@@ -230,9 +232,9 @@ function startHealthCheckMonitor() {
     for (const [name, svc] of Object.entries(SERVICES)) {
       // 跳过未启用自动重启的服务
       if (!svc.autoRestart) continue;
-      
+
       const state = processes[name];
-      
+
       // 对于未运行服务，补充“达到最大重启次数后的冷却恢复”逻辑
       if (!state || state.stopping) continue;
       if (state.status !== 'running') {
@@ -249,7 +251,7 @@ function startHealthCheckMonitor() {
         }
         continue;
       }
-      
+
       // 检查进程是否真的还活着（僵尸进程检测）
       if (state.proc && state.pid && !isProcessAlive(state.pid)) {
         log(`💀 ${svc.name} 僵尸进程检测: PID ${state.pid} 已不存在`, 'WARN');
@@ -260,31 +262,42 @@ function startHealthCheckMonitor() {
         startService(name);
         continue;
       }
-      
+
       // 如果有健康检查，执行健康检查
       if (svc.healthCheck) {
         const health = await checkHealth(name);
-        
+
         // 如果健康检查失败，尝试恢复
         if (health.status === 'unhealthy') {
           const uptime = state.lastStart ? Math.round((Date.now() - state.lastStart) / 1000) : 0;
           log(`⚠️ ${svc.name} 健康检查失败 (运行时间: ${uptime}s)`, 'WARN');
-          
+
           // 检查进程是否真的还活着
           if (state.proc && !state.proc.killed && isProcessAlive(state.proc.pid)) {
             log(`🔄 ${svc.name} 进程存在但不健康，强制重启...`, 'WARN');
-            
+
             // 强制重启不健康的服务
             state.stopping = true;
             if (state.restartTimer) clearTimeout(state.restartTimer);
-            
+
+            // 超时保险：如果 5 秒后还没触发 exit，证明 Node 丢失了 SIGKILL 回调或进程卡死在内核态，强行抛出残骸并启动新树
+            const forceStartTimer = setTimeout(() => {
+              if (state.stopping) {
+                log(`健康检查强杀超时保险触发: ${name} (PID: ${state.pid}) 的离线信号丢失，强制执行复活序列`, 'WARN');
+                state.stopping = false;
+                state.restarts = 0;
+                startService(name);
+              }
+            }, 5000);
+
             state.proc.once('exit', () => {
+              clearTimeout(forceStartTimer);
               state.stopping = false;
               // 重置重启计数，因为这是健康检查触发的重启
               state.restarts = 0;
               setTimeout(() => startService(name), 2000);
             });
-            
+
             try {
               process.kill(state.proc.pid, 'SIGKILL');
             } catch (e) {
@@ -344,7 +357,7 @@ function startService(name, options = {}) {
       }
     }
   }
-  
+
   // 如果内存中记录了进程但实际已死亡，清理状态
   if (processes[name]?.proc && !isProcessAlive(processes[name].proc.pid)) {
     log(`${svc.name} 僵尸进程检测: PID ${processes[name].proc.pid} 已不存在，清理状态`, 'WARN');
@@ -357,7 +370,7 @@ function startService(name, options = {}) {
     try {
       execSync('schtasks /End /TN "OpenClaw Gateway" 2>nul', { timeout: 5000 });
       log('已停止 Gateway 计划任务');
-    } catch (e) {} // 任务不存在或已停止，忽略
+    } catch (e) { } // 任务不存在或已停止，忽略
     try {
       const result = execSync('netstat -ano | findstr :18789 | findstr LISTENING', { encoding: 'utf-8', timeout: 5000 });
       const pid = result.trim().split(/\s+/).pop();
@@ -365,7 +378,7 @@ function startService(name, options = {}) {
         execSync(`taskkill /PID ${pid} /T /F`, { timeout: 5000 });
         log(`已清理 Gateway 残留进程 (PID: ${pid})`);
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // Bridge 特殊处理：清理锁端口残留进程
@@ -377,13 +390,42 @@ function startService(name, options = {}) {
         execSync(`taskkill /PID ${pid} /T /F`, { timeout: 5000 });
         log(`已清理 Bridge 残留进程 (PID: ${pid})`);
       }
-    } catch (e) {} // 端口未被占用，正常
+    } catch (e) { } // 端口未被占用，正常
+  }
+
+  // Generic Port Cleanup for the starting service
+  const portsToClean = new Set();
+  if (svc?.healthCheck?.type === 'http' && typeof svc.healthCheck.url === 'string') {
+    try {
+      const p = Number(new URL(svc.healthCheck.url).port);
+      if (Number.isInteger(p) && p > 0) portsToClean.add(p);
+    } catch (e) { }
+  }
+  if (Array.isArray(svc.cleanupPorts)) {
+    for (const p of svc.cleanupPorts) {
+      const port = Number(p);
+      if (Number.isInteger(port) && port > 0) portsToClean.add(port);
+    }
+  }
+
+  for (const port of portsToClean) {
+    try {
+      const result = execSync(`netstat -ano | findstr :${port} | findstr LISTENING`, { encoding: 'utf-8', timeout: 5000 });
+      const lines = result.trim().split('\n');
+      for (const line of lines) {
+        const pid = line.trim().split(/\s+/).pop();
+        if (pid && pid !== '0' && !checkSuicideAttempt(parseInt(pid))) {
+          execSync(`taskkill /PID ${pid} /T /F`, { timeout: 5000 });
+          log(`已清理启动前占用端口 ${port} 的残留进程 (PID: ${pid})`, 'WARN');
+        }
+      }
+    } catch (e) { } // 端口没被占用，正常
   }
 
   const logFile = path.join(LOG_DIR, `${name}.log`);
 
   // 使用服务配置中的环境变量（如果有）
-  const spawnEnv = svc.env 
+  const spawnEnv = svc.env
     ? { ...process.env, ...svc.env }
     : undefined;
 
@@ -400,14 +442,14 @@ function startService(name, options = {}) {
   if (name === 'napcat') {
     const handleOutput = (data) => {
       const text = data.toString();
-      try { fs.appendFileSync(logFile, text); } catch(e){}
-      
+      try { fs.appendFileSync(logFile, text); } catch (e) { }
+
       if (text.includes('token=')) {
         const match = text.match(/(http:\/\/127\.0\.0\.1:\d+\/(web\/index\.html|webui)\?token=[a-zA-Z0-9]+)/);
         if (match) {
           const url = match[1];
           log(`\n🔔 [NapCat Login] 请访问以下地址登录 QQ:\n👉 ${url}\n`, 'IMPORTANT');
-          try { fs.writeFileSync(path.join(__dirname, 'napcat-login.txt'), url); } catch(e){}
+          try { fs.writeFileSync(path.join(__dirname, 'napcat-login.txt'), url); } catch (e) { }
           require('child_process').exec(`start "" "${url}"`);
         }
       }
@@ -435,17 +477,17 @@ function startService(name, options = {}) {
     state.lastExit = Date.now();
     state.exitCode = code;
     state.pid = null;
-    
+
     const uptime = state.lastExit - state.lastStart;
-    log(`✗ ${svc.name} 退出 (code=${code}, signal=${signal}, uptime=${Math.round(uptime/1000)}s)`);
-    
+    log(`✗ ${svc.name} 退出 (code=${code}, signal=${signal}, uptime=${Math.round(uptime / 1000)}s)`);
+
     // 如果运行超过60秒，重置重启计数
     if (uptime > 60000) state.restarts = 0;
 
     if (svc.autoRestart && state.restarts < svc.maxRestarts && !state.stopping) {
       state.restarts++;
       const delay = Math.min(svc.restartDelayMs * Math.pow(1.5, state.restarts - 1), svc.restartBackoffMax || 60000);
-      log(`↻ ${svc.name} 将在 ${Math.round(delay/1000)}s 后重启 (第 ${state.restarts} 次)`, 'INFO');
+      log(`↻ ${svc.name} 将在 ${Math.round(delay / 1000)}s 后重启 (第 ${state.restarts} 次)`, 'INFO');
       state.restartTimer = setTimeout(() => startService(name), delay);
     } else if (svc.autoRestart && state.restarts >= svc.maxRestarts && !state.stopping) {
       state.maxRestartReachedAt = Date.now();
@@ -475,9 +517,9 @@ function stopService(name) {
 
   state.stopping = true;
   if (state.restartTimer) clearTimeout(state.restartTimer);
-  
+
   log(`⏹ 正在停止 ${SERVICES[name].name} (PID: ${state.pid})...`);
-  
+
   try {
     // Windows: 使用 taskkill /T 杀掉整个进程树
     execSync(`taskkill /PID ${state.proc.pid} /T /F`, { timeout: 10000 });
@@ -500,7 +542,7 @@ function restartService(name) {
     log(`正在重启服务: ${name}`);
     state.stopping = true;
     if (state.restartTimer) clearTimeout(state.restartTimer);
-    
+
     // 超时保险：如果 5 秒后还没触发 exit，强行启动
     const forceStartTimer = setTimeout(() => {
       if (state.stopping) {
@@ -516,8 +558,8 @@ function restartService(name) {
       state.restarts = 0;
       setTimeout(() => startService(name), 1000);
     });
-    
-    try { process.kill(state.proc.pid, 'SIGKILL'); } catch (e) {}
+
+    try { process.kill(state.proc.pid, 'SIGKILL'); } catch (e) { }
   } else {
     log(`服务未运行，直接尝试启动: ${name}`);
     if (state) { state.stopping = false; state.restarts = 0; }
@@ -528,7 +570,7 @@ function restartService(name) {
 async function checkHealth(name) {
   const svc = SERVICES[name];
   if (!svc?.healthCheck) return { status: 'no-check' };
-  
+
   if (svc.healthCheck.type === 'http') {
     return new Promise((resolve) => {
       const req = http.get(svc.healthCheck.url, { timeout: 5000 }, (res) => {
@@ -564,11 +606,11 @@ async function getStatus() {
 function startControlServer() {
   const server = http.createServer(async (req, res) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    
+
     const url = new URL(req.url, 'http://localhost');
     const action = url.pathname.slice(1);  // /status -> status
     const target = url.searchParams.get('name');
-    
+
     try {
       switch (action) {
         case 'status': {
@@ -614,11 +656,11 @@ function startControlServer() {
             res.end(JSON.stringify({ error: 'service not found' }));
             break;
           }
-          
+
           // 更新配置文件
           config.services[target].enabled = true;
           fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
-          
+
           // 立即将服务添加到 SERVICES 对象
           const svc = config.services[target];
           SERVICES[target] = {
@@ -639,7 +681,7 @@ function startControlServer() {
             dependsOn: svc.dependsOn || [],
             cleanupPorts: Array.isArray(svc.cleanupPorts) ? svc.cleanupPorts : [],
           };
-          
+
           // 初始化进程状态
           if (!processes[target]) {
             processes[target] = {
@@ -651,7 +693,7 @@ function startControlServer() {
               exitCode: null,
             };
           }
-          
+
           log(`服务 ${target} 已启用并加载到运行时`);
           res.end(JSON.stringify({ ok: true, action: 'enable', target, note: 'service loaded, use /start to run' }));
           break;
@@ -668,33 +710,33 @@ function startControlServer() {
             res.end(JSON.stringify({ error: 'service not found' }));
             break;
           }
-          
+
           // 先停止服务
           if (SERVICES[target]) {
             stopService(target);
           }
-          
+
           // 更新配置文件
           config.services[target].enabled = false;
           fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
-          
+
           // 从 SERVICES 对象中移除
           delete SERVICES[target];
-          
+
           log(`服务 ${target} 已禁用并从运行时移除`);
           res.end(JSON.stringify({ ok: true, action: 'disable', target }));
           break;
         }
         default:
           res.writeHead(404);
-          res.end(JSON.stringify({ error: 'unknown action', available: ['status','start','stop','restart','logs','health','enable','disable'] }));
+          res.end(JSON.stringify({ error: 'unknown action', available: ['status', 'start', 'stop', 'restart', 'logs', 'health', 'enable', 'disable'] }));
       }
     } catch (err) {
       res.writeHead(500);
       res.end(JSON.stringify({ error: err.message }));
     }
   });
-  
+
   server.listen(PM_PORT, '127.0.0.1', () => {
     log(`控制接口已启动: http://127.0.0.1:${PM_PORT}/`);
     log(`  GET /status           - 查看状态`);
@@ -715,7 +757,7 @@ async function main() {
   const actionArgs = argv.slice(1);
   const cleanMode = actionArgs.includes('--clean') || actionArgs.includes('-c');
   const target = actionArgs.find((arg) => !arg.startsWith('-'));
-  
+
   // 处理 setup 命令
   if (action === 'setup') {
     console.log('\n🔧 启动配置向导...\n');
@@ -726,20 +768,20 @@ async function main() {
     wizard.on('exit', (code) => process.exit(code));
     return;
   }
-  
+
   // 加载服务配置 (除了 setup 命令外都需要)
   SERVICES = loadServicesConfig();
-  
+
   // 如果不是 daemon 模式，通过 HTTP 发送命令
   if (action === 'status' || action === 'logs' || action === 'enable' || action === 'disable') {
     // 尝试连接已运行的 PM
     try {
-      const url = target 
+      const url = target
         ? `http://127.0.0.1:${PM_PORT}/${action}?name=${target}`
         : `http://127.0.0.1:${PM_PORT}/${action}`;
       const res = await fetch(url);
       const text = await res.text();
-      
+
       if (action === 'enable' || action === 'disable') {
         const data = JSON.parse(text);
         if (action === 'enable') {
@@ -750,26 +792,26 @@ async function main() {
         }
         return;
       }
-      
+
       if (action === 'status') {
         const data = JSON.parse(text);
         console.log('\n╔════════════════════════════════════════════════════════════════╗');
         console.log('║       🐉 希德莉亚进程管理器 v2.0 Universal                   ║');
         console.log('║          Sideria Process Manager                              ║');
         console.log('╚════════════════════════════════════════════════════════════════╝\n');
-        
+
         // 统计信息
         const total = Object.keys(data).length;
         const running = Object.values(data).filter(s => s.status === 'running').length;
         const healthy = Object.values(data).filter(s => s.health === 'healthy').length;
-        
+
         console.log(`📊 总览: ${running}/${total} 运行中  |  ${healthy} 健康  |  ${total - running} 已停止\n`);
         console.log('─'.repeat(64) + '\n');
-        
+
         for (const [name, info] of Object.entries(data)) {
           const statusIcon = info.status === 'running' ? '🟢' : '🔴';
           const healthIcon = info.health === 'healthy' ? '💚' : info.health === 'no-check' ? '⚪' : '💔';
-          
+
           // 格式化运行时间
           let uptimeStr = '-';
           if (info.uptime > 0) {
@@ -780,7 +822,7 @@ async function main() {
             else if (mins > 0) uptimeStr = `${mins}m ${secs}s`;
             else uptimeStr = `${secs}s`;
           }
-          
+
           console.log(`${statusIcon} ${info.name}`);
           console.log(`   状态: ${info.status === 'running' ? '运行中' : '已停止'}  |  健康: ${healthIcon}  |  PID: ${info.pid || '-'}`);
           console.log(`   运行时间: ${uptimeStr}  |  重启次数: ${info.restarts}`);
@@ -789,7 +831,7 @@ async function main() {
           }
           console.log('');
         }
-        
+
         console.log('─'.repeat(64));
         console.log('💡 提示: 使用 "node sideria-pm.js start <服务名>" 启动单个服务');
         console.log('        使用 "node sideria-pm.js logs <服务名>" 查看日志');
@@ -814,7 +856,7 @@ async function main() {
         : `http://127.0.0.1:${PM_PORT}/${action}`;
       const res = await fetch(url);
       const data = await res.json();
-      
+
       if (action === 'stop') {
         console.log('\n🛑 停止命令已发送');
         console.log(`   目标: ${target || '所有服务'}`);
@@ -865,14 +907,14 @@ async function main() {
       console.log('║       🐉 希德莉亚进程管理器 v2.0 Universal                   ║');
       console.log('║          Sideria Process Manager                              ║');
       console.log('╚════════════════════════════════════════════════════════════════╝\n');
-      
+
       log('🚀 正在启动进程管理器...');
       if (cleanMode) {
         log('🧹 清理模式: 将先清理残留进程');
       } else {
         log('🛡️ 兼容模式: 保留现有进程');
       }
-      
+
       log('');
       log('📋 增强功能:');
       log('   ✅ 自杀防护 - 防止误杀 PM 自身');
@@ -889,7 +931,7 @@ async function main() {
 
       const bootServices = () => {
         startControlServer();
-        
+
         log('');
         log('🔧 开始启动服务...');
         log('─'.repeat(64));
@@ -904,13 +946,13 @@ async function main() {
           const sortedServices = Object.entries(SERVICES)
             .filter(([name, svc]) => svc.autoStart !== false && !EXCLUDED_FROM_BULK_START.has(name))
             .sort(([, a], [, b]) => (a.startupOrder || 99) - (b.startupOrder || 99));
-          
+
           log('📦 按配置顺序启动所有服务（已排除 live2d、gcli2api）:');
           sortedServices.forEach(([name, svc], index) => {
             const emoji = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'][index] || '▪️';
             log(`   ${emoji}  ${svc.name}`);
           });
-          
+
           // 列出手动启动的服务 + 全量启动默认排除的服务
           const manualServices = Object.entries(SERVICES)
             .filter(([name, svc]) => svc.autoStart === false || EXCLUDED_FROM_BULK_START.has(name));
@@ -921,7 +963,7 @@ async function main() {
             });
           }
           log('');
-          
+
           // 按顺序启动服务
           sortedServices.forEach(([name, svc]) => {
             const delay = svc.startupDelay || 0;
@@ -931,7 +973,7 @@ async function main() {
               setTimeout(() => startService(name), delay);
             }
           });
-          
+
           // 启动完成提示
           const maxDelay = Math.max(...sortedServices.map(([, svc]) => svc.startupDelay || 0));
           setTimeout(() => {
@@ -971,13 +1013,13 @@ async function killExistingProcesses() {
     try {
       execSync('schtasks /End /TN "OpenClaw Gateway" 2>nul', { timeout: 5000 });
       log('已停止 Gateway 计划任务');
-    } catch (e) {}
+    } catch (e) { }
 
     // 强制清理 QQ/NapCat 残留
     try {
       execSync('taskkill /F /IM NapCatWinBootMain.exe /T 2>nul', { timeout: 5000 });
       log('已清理残留 NapCat 进程');
-    } catch (e) {}
+    } catch (e) { }
 
     // 按端口清理残留进程（内置端口 + 配置中的健康检查端口 + cleanupPorts）
     const managedPorts = new Map([
@@ -994,7 +1036,7 @@ async function killExistingProcesses() {
         try {
           const p = Number(new URL(svc.healthCheck.url).port);
           if (Number.isInteger(p) && p > 0) managedPorts.set(p, svcName);
-        } catch (e) {}
+        } catch (e) { }
       }
       if (Array.isArray(svc.cleanupPorts)) {
         for (const p of svc.cleanupPorts) {
@@ -1017,9 +1059,9 @@ async function killExistingProcesses() {
           try {
             execSync(`taskkill /PID ${pid} /T /F`, { timeout: 5000 });
             log(`已清理残留 ${svcName} 进程 (PID: ${pid})`);
-          } catch (e) {}
+          } catch (e) { }
         }
-      } catch (e) {} // 端口没被占用，正常
+      } catch (e) { } // 端口没被占用，正常
     }
 
     // 检查 memory-recorder 进程
@@ -1029,17 +1071,17 @@ async function killExistingProcesses() {
       if (pids) {
         for (const match of pids) {
           const pid = match.split('=')[1];
-          try { execSync(`taskkill /PID ${pid} /F`, { timeout: 5000 }); } catch (e) {}
+          try { execSync(`taskkill /PID ${pid} /F`, { timeout: 5000 }); } catch (e) { }
         }
         log(`已清理残留 recorder 进程`);
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 清理 Electron (Live2D) 残留
     try {
       execSync('taskkill /F /IM electron.exe /T 2>nul', { timeout: 5000 });
       log('已清理残留 Electron/Live2D 进程');
-    } catch (e) {}
+    } catch (e) { }
 
     // 等待端口释放
     await new Promise(r => setTimeout(r, 1500));

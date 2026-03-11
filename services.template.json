@@ -7,7 +7,9 @@
       "name": "OpenClaw Gateway (核心网关)",
       "enabled": true,
       "cmd": "openclaw",
-      "args": ["gateway"],
+      "args": [
+        "gateway"
+      ],
       "cwd": "D:\\openclaw",
       "healthCheck": {
         "type": "http",
@@ -25,7 +27,9 @@
       "name": "Memory Recorder (记忆晶石)",
       "enabled": true,
       "cmd": "node",
-      "args": ["../openclaw-napcat-bridge/memory-recorder.js"],
+      "args": [
+        "../openclaw-napcat-bridge/memory-recorder.js"
+      ],
       "cwd": "D:\\openclaw\\sideria-pm",
       "healthCheck": null,
       "autoRestart": true,
@@ -38,7 +42,7 @@
     "vector_server": {
       "name": "Sideria Embedding Server (向量服务)",
       "enabled": false,
-      "cmd": "python",
+      "cmd": ".venv\\Scripts\\python.exe",
       "args": [
         "embedding_server.py",
         "--model",
@@ -64,7 +68,9 @@
       "name": "Sideria Live2D (桌面立绘)",
       "enabled": false,
       "cmd": "D:\\openclaw\\sideria-live2d\\node_modules\\electron\\dist\\electron.exe",
-      "args": ["."],
+      "args": [
+        "."
+      ],
       "cwd": "D:\\openclaw\\sideria-live2d",
       "healthCheck": null,
       "autoStart": false,
@@ -135,7 +141,9 @@
       "name": "NapCat QQ (通讯底座)",
       "enabled": true,
       "cmd": "D:\\openclaw\\NapCat.44498.Shell\\NapCatWinBootMain.exe",
-      "args": ["843988704"],
+      "args": [
+        "843988704"
+      ],
       "cwd": "D:\\openclaw\\NapCat.44498.Shell",
       "healthCheck": null,
       "autoRestart": true,
@@ -149,13 +157,18 @@
       "name": "Bridge (全知链路)",
       "enabled": true,
       "cmd": "node",
-      "args": ["../openclaw-napcat-bridge/bridge.js"],
+      "args": [
+        "../openclaw-napcat-bridge/bridge.js"
+      ],
       "cwd": "D:\\openclaw\\sideria-pm",
       "healthCheck": {
         "type": "http",
         "url": "http://127.0.0.1:29998/health"
       },
-      "dependsOn": ["gateway", "napcat"],
+      "dependsOn": [
+        "gateway",
+        "napcat"
+      ],
       "autoRestart": true,
       "maxRestarts": 50,
       "restartDelayMs": 3000,
@@ -166,15 +179,22 @@
     "gcli2api": {
       "name": "gcli2api (GeminiCLI API 网关)",
       "enabled": false,
-      "cmd": "D:\\66fa273c324faa571eb7b6e3aa6237\\gcli2api\\.venv\\Scripts\\python.exe",
-      "args": ["web.py"],
-      "cwd": "D:\\66fa273c324faa571eb7b6e3aa6237\\gcli2api",
-      "healthCheck": null,
+      "cmd": "start-pm.cmd",
+      "args": [],
+      "cwd": "D:\\openclaw\\gcli2api",
+      "healthCheck": {
+        "type": "http",
+        "url": "http://127.0.0.1:7861/front/control_panel.html"
+      },
       "env": {
         "PORT": "7861"
       },
-      "dependsOn": ["gateway"],
-      "cleanupPorts": [7861],
+      "dependsOn": [
+        "gateway"
+      ],
+      "cleanupPorts": [
+        7861
+      ],
       "autoRestart": true,
       "maxRestarts": 20,
       "restartDelayMs": 5000,
