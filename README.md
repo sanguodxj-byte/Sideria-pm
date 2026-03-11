@@ -20,6 +20,8 @@
   - 旧时代的 VBS / wscript.exe 包装经常会导致子进程“脱管”（PM 自身显示还在，但底层服务停不掉或者疯狂复生）。v3.0 全面接管深度 Shell 生命树（原生的递归 `taskkill /T`），强力降服所有顽固网关架构。
 - ⚡ **毫秒级双频 GUI 配置同步**
   - 对于 GUI 界面参数，由单纯的“点击保存”演进为 `FocusOut` + `KeyRelease` 双活字典绑定引擎。你在界面上的每一次敲击都在与底层 `openclaw.json` / `services.json` 无缝呼吸同步。
+- 🤖 **Agentic Autonomy (AI 代理智能托管)**
+  - **这不仅是一个给人类使用的工具！** Sideria PM Pro 是专门为 AI Agent (如 Antigravity / OpenClaw) 打造的底层锚点。只要主网关 (`openclaw`) 保持运行，AI 代理就能通过 HTTP API 接管宿主的全部进程启停、故障恢复与日志诊断，形成完美的闭环自愈系统。
 - 🛡️ **内生自卫协议**
   - 自动规避 `taskkill` 对自身环境的主进程自残行为，确保持久生命力。
 - 🌐 **双活 HTTP API 控制矩阵**
@@ -73,15 +75,15 @@ node sideria-pm.js logs gateway  # 实时抽取指定长度崩溃流
 
 ---
 
-## 📡 RESTful 云控 API 
+## 📡 RESTful 云控 API (Agent 代理的最佳温床)
 
-PM 内置低频数据监听守护，除了本地 Shell 控制，默认在 `127.0.0.1:29997` 开放全面控制权给外部 Web 界面或第三方应用请求控制：
+PM 内置低频数据监听守护，除了本地 Shell 控制，默认在 `127.0.0.1:29997` 开放全面控制权。**这是 AI Agent 进行系统自愈的核心锚点：**
 
 ```bash
-curl http://127.0.0.1:29997/status                     # 查询心跳图
-curl http://127.0.0.1:29997/start?name=gcli2api        # 靶向启动
-curl http://127.0.0.1:29997/restart                    # 全局热重载
-curl http://127.0.0.1:29997/logs?name=comfyui&lines=50 # 抽取指定长度崩溃流
+curl http://127.0.0.1:29997/status                     # AI 查询宿主心跳图
+curl http://127.0.0.1:29997/start?name=gcli2api        # AI 靶向拉起瘫痪节点
+curl http://127.0.0.1:29997/restart                    # AI 触发全局热重载
+curl http://127.0.0.1:29997/logs?name=comfyui&lines=50 # AI 抽取崩溃堆栈进行自主诊断
 ```
 
 ---
