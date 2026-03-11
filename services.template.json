@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Sideria PM Services Configuration",
+  "description": "服务配置模板 - 首次运行时会引导你填写",
+  "services": {
+    "gateway": {
+      "name": "OpenClaw Gateway (核心网关)",
+      "enabled": true,
+      "cmd": "openclaw",
+      "args": ["gateway"],
+      "cwd": "D:\\openclaw",
+      "healthCheck": {
+        "type": "http",
+        "url": "http://127.0.0.1:18789/v1/models"
+      },
+      "preStart": "schtasks",
+      "autoRestart": true,
+      "maxRestarts": 20,
+      "restartDelayMs": 5000,
+      "restartBackoffMax": 60000,
+      "startupOrder": 1,
+      "startupDelay": 0
+    },
+    "recorder": {
+      "name": "Memory Recorder (记忆晶石)",
+      "enabled": true,
+      "cmd": "node",
+      "args": ["../openclaw-napcat-bridge/memory-recorder.js"],
+      "cwd": "D:\\openclaw\\sideria-pm",
+      "healthCheck": null,
+      "autoRestart": true,
+      "maxRestarts": 50,
+      "restartDelayMs": 5000,
+      "restartBackoffMax": 60000,
+      "startupOrder": 2,
+      "startupDelay": 3000
+    },
+    "vector_server": {
+      "name": "Sideria Embedding Server (向量服务)",
+      "enabled": false,
+      "cmd": "python",
+      "args": [
+        "embedding_server.py",
+        "--model",
+        "sentence-transformers/all-MiniLM-L6-v2",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5000"
+      ],
+      "cwd": "D:\\openclaw\\vector-service",
+      "healthCheck": {
+        "type": "http",
+        "url": "http://127.0.0.1:5000/health"
+      },
+      "autoRestart": true,
+      "maxRestarts": 10,
+      "restartDelayMs": 10000,
+      "restartBackoffMax": 60000,
+      "startupOrder": 3,
+      "startupDelay": 6000
+    },
+    "live2d": {
+      "name": "Sideria Live2D (桌面立绘)",
+      "enabled": false,
+      "cmd": "D:\\openclaw\\sideria-live2d\\node_modules\\electron\\dist\\electron.exe",
+      "args": ["."],
+      "cwd": "D:\\openclaw\\sideria-live2d",
+      "healthCheck": null,
+      "autoStart": false,
+      "autoRestart": true,
+      "maxRestarts": 5,
+      "restartDelayMs": 5000,
+      "restartBackoffMax": 30000,
+      "startupOrder": 99,
+      "startupDelay": 0
+    },
+    "comfyui": {
+      "name": "ComfyUI (绘梦引擎)",
+      "enabled": true,
+      "cmd": "D:\\openclaw\\ComfyUI-aki-v2\\python\\python.exe",
+      "args": [
+        "main.py",
+        "--listen",
+        "--port",
+        "8188",
+        "--preview-method",
+        "auto",
+        "--lowvram",
+        "--disable-smart-memory",
+        "--disable-auto-launch"
+      ],
+      "cwd": "D:\\openclaw\\ComfyUI-aki-v2\\ComfyUI",
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "healthCheck": {
+        "type": "http",
+        "url": "http://127.0.0.1:8188/system_stats"
+      },
+      "autoRestart": true,
+      "maxRestarts": 10,
+      "restartDelayMs": 5000,
+      "restartBackoffMax": 60000,
+      "startupOrder": 4,
+      "startupDelay": 10000
+    },
+    "gpt_sovits": {
+      "name": "GPT-SoVITS (灵魂之声)",
+      "enabled": true,
+      "cmd": "D:\\openclaw\\GPT-SoVITS-v2pro-20250604\\runtime\\python.exe",
+      "args": [
+        "api_v2.py",
+        "-a",
+        "127.0.0.1",
+        "-p",
+        "9880",
+        "-c",
+        "GPT_SoVITS/configs/tts_infer.yaml"
+      ],
+      "cwd": "D:\\openclaw\\GPT-SoVITS-v2pro-20250604",
+      "healthCheck": {
+        "type": "http",
+        "url": "http://127.0.0.1:9880/"
+      },
+      "autoRestart": true,
+      "maxRestarts": 5,
+      "restartDelayMs": 10000,
+      "restartBackoffMax": 120000,
+      "startupOrder": 5,
+      "startupDelay": 12000
+    },
+    "napcat": {
+      "name": "NapCat QQ (通讯底座)",
+      "enabled": true,
+      "cmd": "D:\\openclaw\\NapCat.44498.Shell\\NapCatWinBootMain.exe",
+      "args": ["843988704"],
+      "cwd": "D:\\openclaw\\NapCat.44498.Shell",
+      "healthCheck": null,
+      "autoRestart": true,
+      "maxRestarts": 30,
+      "restartDelayMs": 5000,
+      "restartBackoffMax": 30000,
+      "startupOrder": 6,
+      "startupDelay": 15000
+    },
+    "bridge": {
+      "name": "Bridge (全知链路)",
+      "enabled": true,
+      "cmd": "node",
+      "args": ["../openclaw-napcat-bridge/bridge.js"],
+      "cwd": "D:\\openclaw\\sideria-pm",
+      "healthCheck": {
+        "type": "http",
+        "url": "http://127.0.0.1:29998/health"
+      },
+      "dependsOn": ["gateway", "napcat"],
+      "autoRestart": true,
+      "maxRestarts": 50,
+      "restartDelayMs": 3000,
+      "restartBackoffMax": 30000,
+      "startupOrder": 7,
+      "startupDelay": 20000
+    },
+    "gcli2api": {
+      "name": "gcli2api (GeminiCLI API 网关)",
+      "enabled": false,
+      "cmd": "D:\\66fa273c324faa571eb7b6e3aa6237\\gcli2api\\.venv\\Scripts\\python.exe",
+      "args": ["web.py"],
+      "cwd": "D:\\66fa273c324faa571eb7b6e3aa6237\\gcli2api",
+      "healthCheck": null,
+      "env": {
+        "PORT": "7861"
+      },
+      "dependsOn": ["gateway"],
+      "cleanupPorts": [7861],
+      "autoRestart": true,
+      "maxRestarts": 20,
+      "restartDelayMs": 5000,
+      "restartBackoffMax": 60000,
+      "startupOrder": 8,
+      "startupDelay": 22000
+    }
+  }
+}
