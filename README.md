@@ -27,60 +27,48 @@
 
 ---
 
-## 🚀 快速接管
+## 🚀 快速接管 (双端支持)
 
-### 1. 自动感应配置 (新环境自动部署)
+Sideria PM Pro v3.0 为您提供了优雅的**全景化图形界面 (GUI)**，告别繁琐的命令行输码：
 
-首次进入新环境，只需运行一次：
+### 1. 启动图形化视界 (GUI 面板)
 
-```bash
-node sideria-pm.js setup
-```
+您不需要输入任何复杂指令，直接双击运行以下任一启动程序：
 
-**发生了什么？** 猎犬算法启动：
-- 自动捕捉宿主工作流根节点。
-- 对 Python 应用：穿透到各业务层虚拟环境抓取对应 `.exe`。
-- 对 Node/Electron 应用：智能过滤 `node_modules` 回溯主启动节点。
-- 最终汇聚生成健壮的 `services.json`，且能适应未来的位移。
+- 🌟 **如果你下载的是整合打包版**：直击双击运行 `Sideria-PM.exe`。
+- 🐍 **如果您在源码环境**：双击运行 `Sideria-PM.bat` 或在终端执行 `python sideria-pm-gui.py`。
 
-### 2. 引爆所有服务矩阵
+![Sideria PM GUI](sideria-pm.ico) <!-- 如果有真实的面板截图可替换此处 -->
 
-```bash
-node sideria-pm.js start
-```
+### 2. 在界面中接管一切
 
-遇到旧配置残留或卡死？使用暴力重洗模式：
-
-```bash
-node sideria-pm.js start --clean
-```
-
-### 3. 数据可视化 (状态与仪表盘)
-
-```bash
-node sideria-pm.js status
-```
-
-*面板将在控制台中实时反馈以下维度的健康切片：*
-*• 运行时长、• 保活重启统计、• 实时 PID 跟踪、• HTTP 服务级健康探针返回 (`200 OK=💚`)*
+在启动的 Sideria 配置窗体中：
+1. **自动探查配置**：只需在面板中触发环境配置或保存项，底层智能向导将自动捕捉并生成 `services.json` 文件。
+2. **可视化服务控制**：通过主界面侧边栏，或通过核心配置页直接联动网关环境。
+3. **输入即存 (Data Binding)**：所有在输入框敲击的信息都会被**毫秒级切片存储**，无需再担心忘点保存导致服务加载失败。
 
 ---
 
-## 📖 控制指令大典
+## 💻 极客 CLI 指令大典 (面向服务器无头环境)
 
-Sideria PM Pro 是极其模块化的。除总体把控外，您也可如同操控 Docker 容器般单独启停控制域：
+图形化界面虽然优雅，但在远程 Linux / 纯终端环境里，底层引擎依然像外科手术刀般精准。您随时可以降级回终端调用：
 
 ```bash
-# 重启所有系统群
-node sideria-pm.js restart
+# === 初装拓荒 ===
+node sideria-pm.js setup
 
-# 控制单个独立节点 (如 Gateway 或 某些 Worker)
+# === 唤醒与杀戮 ===
+node sideria-pm.js start         # 引爆所有服务矩阵
+node sideria-pm.js start --clean # 清理旧残留并启动
+
+# === 独立控制节点 ===
 node sideria-pm.js start comfyui
 node sideria-pm.js stop gateway
 node sideria-pm.js restart feibi-node
 
-# 溯源查询: 实时调取目标节点崩溃或输出底库 (支持自动最后N行剪切)
-node sideria-pm.js logs gateway
+# === 溯源查询 ===
+node sideria-pm.js status        # 查看全局健康热力图
+node sideria-pm.js logs gateway  # 实时抽取指定长度崩溃流
 ```
 
 ---
