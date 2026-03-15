@@ -1,0 +1,56 @@
+{
+  "gateway": {
+    "status": "running",
+    "pid": 16640,
+    "restarts": 0,
+    "lastStart": 1773550403467,
+    "lastExit": 1773549429969,
+    "exitCode": 1
+  },
+  "recorder": {
+    "status": "running",
+    "pid": 33136,
+    "restarts": 0,
+    "lastStart": 1773531443972
+  },
+  "vector_server": {
+    "status": "stopped",
+    "pid": null,
+    "restarts": 1,
+    "lastStart": 1773531446988,
+    "lastExit": 1773531447001,
+    "exitCode": 1
+  },
+  "comfyui": {
+    "status": "running",
+    "pid": 16572,
+    "restarts": 0,
+    "lastStart": 1773531451142
+  },
+  "gpt_sovits": {
+    "status": "running",
+    "pid": 15256,
+    "restarts": 0,
+    "lastStart": 1773531453055
+  },
+  "napcat": {
+    "status": "running",
+    "pid": 32692,
+    "restarts": 0,
+    "lastStart": 1773531455971
+  },
+  "bridge": {
+    "status": "running",
+    "pid": 6788,
+    "restarts": 0,
+    "lastStart": 1773565201452,
+    "lastExit": 1773565199329,
+    "exitCode": 1
+  },
+  "gcli2api": {
+    "status": "running",
+    "pid": 15920,
+    "restarts": 0,
+    "lastStart": 1773545448303
+  }
+}

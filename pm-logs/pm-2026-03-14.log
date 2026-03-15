@@ -1,0 +1,282 @@
+[2026/3/14 01:53:10] [WARN] ⚠️ Bridge (全知链路) 健康检查失败 (运行时间: 13693s)
+[2026/3/14 01:53:10] [WARN] 🔄 Bridge (全知链路) 进程存在但不健康，强制重启...
+[2026/3/14 01:53:10] [INFO] ✗ Bridge (全知链路) 退出 (code=1, signal=null, uptime=13693s)
+[2026/3/14 01:53:12] [WARN] Bridge (全知链路) 僵尸进程检测: PID 28612 已不存在，清理状态
+[2026/3/14 01:53:12] [INFO] 已清理 Bridge 残留进程 (PID: 12300)
+[2026/3/14 01:53:12] [INFO] ✓ Bridge (全知链路) 已启动 (PID: 27500)
+[2026/3/14 01:57:04] [INFO] 正在重启服务: bridge
+[2026/3/14 01:57:04] [INFO] ✗ Bridge (全知链路) 退出 (code=1, signal=null, uptime=232s)
+[2026/3/14 01:57:05] [WARN] Bridge (全知链路) 僵尸进程检测: PID 27500 已不存在，清理状态
+[2026/3/14 01:57:05] [INFO] 已清理 Bridge 残留进程 (PID: 33524)
+[2026/3/14 01:57:05] [INFO] ✓ Bridge (全知链路) 已启动 (PID: 31768)
+[2026/3/14 10:53:01] [INFO] 🚀 正在启动进程管理器...
+[2026/3/14 10:53:01] [INFO] 🛡️ 兼容模式: 保留现有进程
+[2026/3/14 10:53:01] [INFO] 
+[2026/3/14 10:53:01] [INFO] 📋 增强功能:
+[2026/3/14 10:53:01] [INFO]    ✅ 自杀防护 - 防止误杀 PM 自身
+[2026/3/14 10:53:01] [INFO]    ✅ 心跳监控 - 每 5 秒更新状态
+[2026/3/14 10:53:01] [INFO]    ✅ 状态持久化 - 每 30 秒保存快照
+[2026/3/14 10:53:01] [INFO]    ✅ 全局异常捕获 - 防止崩溃
+[2026/3/14 10:53:01] [INFO]    ✅ Live2D 手动启动 - 节省资源
+[2026/3/14 10:53:01] [INFO] 
+[2026/3/14 10:53:01] [INFO] 💓 心跳监控已启动 (5秒间隔)
+[2026/3/14 10:53:01] [INFO] 💾 状态持久化已启动 (30秒间隔)
+[2026/3/14 10:53:01] [INFO] 🏥 健康检查监控已启动 (30秒间隔)
+[2026/3/14 10:53:01] [INFO] 
+[2026/3/14 10:53:01] [INFO] 🔧 开始启动服务...
+[2026/3/14 10:53:01] [INFO] ────────────────────────────────────────────────────────────────
+[2026/3/14 10:53:01] [INFO] 📦 按配置顺序启动所有服务（已排除 live2d、gcli2api）:
+[2026/3/14 10:53:01] [INFO]    1️⃣  OpenClaw Gateway (核心网关)
+[2026/3/14 10:53:01] [INFO]    2️⃣  Memory Recorder (记忆晶石)
+[2026/3/14 10:53:01] [INFO]    3️⃣  Sideria Embedding Server (向量服务)
+[2026/3/14 10:53:01] [INFO]    4️⃣  ComfyUI (绘梦引擎)
+[2026/3/14 10:53:01] [INFO]    5️⃣  GPT-SoVITS (灵魂之声)
+[2026/3/14 10:53:01] [INFO]    6️⃣  NapCat QQ (通讯底座)
+[2026/3/14 10:53:01] [INFO]    7️⃣  Bridge (全知链路)
+[2026/3/14 10:53:01] [INFO]    ⚪ gcli2api (GeminiCLI API 网关) (手动启动)
+[2026/3/14 10:53:01] [INFO] 
+[2026/3/14 10:53:01] [INFO] 已停止 Gateway 计划任务
+[2026/3/14 10:53:01] [INFO] ✓ OpenClaw Gateway (核心网关) 已启动 (PID: 30768)
+[2026/3/14 10:53:01] [INFO] 控制接口已启动: http://127.0.0.1:29997/
+[2026/3/14 10:53:01] [INFO]   GET /status           - 查看状态
+[2026/3/14 10:53:01] [INFO]   GET /start            - 启动全部
+[2026/3/14 10:53:01] [INFO]   GET /start?name=xxx   - 启动单个
+[2026/3/14 10:53:01] [INFO]   GET /stop             - 停止全部
+[2026/3/14 10:53:01] [INFO]   GET /restart          - 重启全部
+[2026/3/14 10:53:01] [INFO]   GET /logs?name=xxx    - 查看日志
+[2026/3/14 10:53:01] [INFO]   GET /enable?name=xxx  - 启用服务（需重启PM）
+[2026/3/14 10:53:01] [INFO]   GET /disable?name=xxx - 禁用服务
+[2026/3/14 10:53:04] [INFO] OpenClaw Gateway (核心网关) 已在运行 (PID: 30768)
+[2026/3/14 10:53:04] [INFO] ✓ Memory Recorder (记忆晶石) 已启动 (PID: 20076)
+[2026/3/14 10:53:04] [WARN] 已清理启动前占用端口 5000 的残留进程 (PID: 2976)
+[2026/3/14 10:53:04] [INFO] ✓ Sideria Embedding Server (向量服务) 已启动 (PID: 1176)
+[2026/3/14 10:53:04] [INFO] ✓ ComfyUI (绘梦引擎) 已启动 (PID: 16668)
+[2026/3/14 10:53:04] [WARN] 已清理启动前占用端口 9880 的残留进程 (PID: 12244)
+[2026/3/14 10:53:04] [INFO] ✓ GPT-SoVITS (灵魂之声) 已启动 (PID: 24748)
+[2026/3/14 10:53:04] [INFO] ✓ NapCat QQ (通讯底座) 已启动 (PID: 23788)
+[2026/3/14 10:53:04] [INFO] ✓ Bridge (全知链路) 已启动 (PID: 29444)
+[2026/3/14 10:53:04] [WARN] 已清理启动前占用端口 7861 的残留进程 (PID: 13580)
+[2026/3/14 10:53:04] [INFO] ✓ gcli2api (GeminiCLI API 网关) 已启动 (PID: 14660)
+[2026/3/14 10:53:04] [INFO] ✗ Sideria Embedding Server (向量服务) 退出 (code=1, signal=null, uptime=0s)
+[2026/3/14 10:53:04] [INFO] ↻ Sideria Embedding Server (向量服务) 将在 10s 后重启 (第 1 次)
+[2026/3/14 10:53:04] [INFO] Memory Recorder (记忆晶石) 已在运行 (PID: 20076)
+[2026/3/14 10:53:05] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6103/webui?token=8c1692d569c8
+
+[2026/3/14 10:53:07] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:53:11] [INFO] ComfyUI (绘梦引擎) 已在运行 (PID: 16668)
+[2026/3/14 10:53:13] [INFO] GPT-SoVITS (灵魂之声) 已在运行 (PID: 24748)
+[2026/3/14 10:53:14] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:53:16] [INFO] NapCat QQ (通讯底座) 已在运行 (PID: 23788)
+[2026/3/14 10:53:21] [INFO] Bridge (全知链路) 已在运行 (PID: 29444)
+[2026/3/14 10:53:23] [INFO] 
+[2026/3/14 10:53:23] [INFO] ────────────────────────────────────────────────────────────────
+[2026/3/14 10:53:23] [INFO] ✅ 所有服务已调度启动！
+[2026/3/14 10:53:23] [INFO] 
+[2026/3/14 10:53:23] [INFO] 💡 提示:
+[2026/3/14 10:53:23] [INFO]    • 查看状态: node sideria-pm.js status
+[2026/3/14 10:53:23] [INFO]    • 查看日志: node sideria-pm.js logs <服务名>
+[2026/3/14 10:53:23] [INFO]    • 启动 gcli2api (GeminiCLI API 网关): node sideria-pm.js start gcli2api
+[2026/3/14 10:53:23] [INFO]    • HTTP API: http://127.0.0.1:29997/status
+[2026/3/14 10:53:23] [INFO]    • 重新配置: node sideria-pm.js setup
+[2026/3/14 10:53:23] [INFO] ────────────────────────────────────────────────────────────────
+[2026/3/14 10:53:23] [INFO] 
+[2026/3/14 10:54:35] [INFO] ✗ Bridge (全知链路) 退出 (code=1, signal=null, uptime=91s)
+[2026/3/14 10:54:35] [INFO] ↻ Bridge (全知链路) 将在 2s 后重启 (第 1 次)
+[2026/3/14 10:54:35] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 10:54:35] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 10:54:35] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:54:36] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:54:48] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:54:48] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 OpenClaw Gateway (核心网关) (PID: 30768)...
+[2026/3/14 10:54:55] [INFO] ✓ 已终止 OpenClaw Gateway (核心网关) 进程树
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 Memory Recorder (记忆晶石) (PID: 20076)...
+[2026/3/14 10:54:55] [INFO] ✓ 已终止 Memory Recorder (记忆晶石) 进程树
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 Sideria Embedding Server (向量服务) (PID: null)...
+[2026/3/14 10:54:55] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 ComfyUI (绘梦引擎) (PID: 16668)...
+[2026/3/14 10:54:55] [INFO] ✓ 已终止 ComfyUI (绘梦引擎) 进程树
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 GPT-SoVITS (灵魂之声) (PID: 24748)...
+[2026/3/14 10:54:55] [INFO] ✓ 已终止 GPT-SoVITS (灵魂之声) 进程树
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 NapCat QQ (通讯底座) (PID: 23788)...
+[2026/3/14 10:54:55] [INFO] ✓ 已终止 NapCat QQ (通讯底座) 进程树
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 10:54:55] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 10:54:55] [INFO] ⏹ 正在停止 gcli2api (GeminiCLI API 网关) (PID: 14660)...
+[2026/3/14 10:54:56] [INFO] ✓ 已终止 gcli2api (GeminiCLI API 网关) 进程树
+[2026/3/14 10:54:56] [INFO] ✗ OpenClaw Gateway (核心网关) 退出 (code=1, signal=null, uptime=114s)
+[2026/3/14 10:54:56] [INFO] ✗ Memory Recorder (记忆晶石) 退出 (code=1, signal=null, uptime=112s)
+[2026/3/14 10:54:56] [INFO] ✗ ComfyUI (绘梦引擎) 退出 (code=1, signal=null, uptime=112s)
+[2026/3/14 10:54:56] [INFO] ✗ GPT-SoVITS (灵魂之声) 退出 (code=1, signal=null, uptime=112s)
+[2026/3/14 10:54:56] [INFO] ✗ NapCat QQ (通讯底座) 退出 (code=1, signal=null, uptime=112s)
+[2026/3/14 10:54:56] [INFO] ✗ gcli2api (GeminiCLI API 网关) 退出 (code=1, signal=null, uptime=111s)
+[2026/3/14 10:55:07] [WARN] OpenClaw Gateway (核心网关) 僵尸进程检测: PID 30768 已不存在，清理状态
+[2026/3/14 10:55:07] [INFO] 已停止 Gateway 计划任务
+[2026/3/14 10:55:07] [INFO] ✓ OpenClaw Gateway (核心网关) 已启动 (PID: 29600)
+[2026/3/14 10:55:07] [WARN] Memory Recorder (记忆晶石) 僵尸进程检测: PID 20076 已不存在，清理状态
+[2026/3/14 10:55:07] [INFO] ✓ Memory Recorder (记忆晶石) 已启动 (PID: 18116)
+[2026/3/14 10:55:07] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:55:07] [WARN] ComfyUI (绘梦引擎) 僵尸进程检测: PID 16668 已不存在，清理状态
+[2026/3/14 10:55:07] [INFO] ✓ ComfyUI (绘梦引擎) 已启动 (PID: 31216)
+[2026/3/14 10:55:07] [WARN] GPT-SoVITS (灵魂之声) 僵尸进程检测: PID 24748 已不存在，清理状态
+[2026/3/14 10:55:07] [INFO] ✓ GPT-SoVITS (灵魂之声) 已启动 (PID: 27344)
+[2026/3/14 10:55:07] [WARN] NapCat QQ (通讯底座) 僵尸进程检测: PID 23788 已不存在，清理状态
+[2026/3/14 10:55:07] [INFO] ✓ NapCat QQ (通讯底座) 已启动 (PID: 9952)
+[2026/3/14 10:55:07] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:55:07] [WARN] gcli2api (GeminiCLI API 网关) 僵尸进程检测: PID 14660 已不存在，清理状态
+[2026/3/14 10:55:07] [INFO] ✓ gcli2api (GeminiCLI API 网关) 已启动 (PID: 26200)
+[2026/3/14 10:55:08] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6103/webui?token=8c1692d569c8
+
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 OpenClaw Gateway (核心网关) (PID: 29600)...
+[2026/3/14 10:56:03] [INFO] ✓ 已终止 OpenClaw Gateway (核心网关) 进程树
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 Memory Recorder (记忆晶石) (PID: 18116)...
+[2026/3/14 10:56:03] [INFO] ✓ 已终止 Memory Recorder (记忆晶石) 进程树
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 Sideria Embedding Server (向量服务) (PID: null)...
+[2026/3/14 10:56:03] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 ComfyUI (绘梦引擎) (PID: 31216)...
+[2026/3/14 10:56:03] [INFO] ✓ 已终止 ComfyUI (绘梦引擎) 进程树
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 GPT-SoVITS (灵魂之声) (PID: 27344)...
+[2026/3/14 10:56:03] [INFO] ✓ 已终止 GPT-SoVITS (灵魂之声) 进程树
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 NapCat QQ (通讯底座) (PID: 9952)...
+[2026/3/14 10:56:03] [INFO] ✓ 已终止 NapCat QQ (通讯底座) 进程树
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 10:56:03] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 10:56:03] [INFO] ⏹ 正在停止 gcli2api (GeminiCLI API 网关) (PID: 26200)...
+[2026/3/14 10:56:03] [INFO] ✓ 已终止 gcli2api (GeminiCLI API 网关) 进程树
+[2026/3/14 10:56:03] [INFO] ✗ OpenClaw Gateway (核心网关) 退出 (code=1, signal=null, uptime=56s)
+[2026/3/14 10:56:03] [INFO] ✗ Memory Recorder (记忆晶石) 退出 (code=1, signal=null, uptime=56s)
+[2026/3/14 10:56:03] [INFO] ✗ ComfyUI (绘梦引擎) 退出 (code=1, signal=null, uptime=56s)
+[2026/3/14 10:56:03] [INFO] ✗ GPT-SoVITS (灵魂之声) 退出 (code=1, signal=null, uptime=56s)
+[2026/3/14 10:56:03] [INFO] ✗ NapCat QQ (通讯底座) 退出 (code=1, signal=null, uptime=56s)
+[2026/3/14 10:56:03] [INFO] ✗ gcli2api (GeminiCLI API 网关) 退出 (code=1, signal=null, uptime=56s)
+[2026/3/14 10:56:56] [WARN] OpenClaw Gateway (核心网关) 僵尸进程检测: PID 29600 已不存在，清理状态
+[2026/3/14 10:56:56] [INFO] 已停止 Gateway 计划任务
+[2026/3/14 10:56:56] [INFO] ✓ OpenClaw Gateway (核心网关) 已启动 (PID: 30224)
+[2026/3/14 10:56:56] [WARN] Memory Recorder (记忆晶石) 僵尸进程检测: PID 18116 已不存在，清理状态
+[2026/3/14 10:56:56] [INFO] ✓ Memory Recorder (记忆晶石) 已启动 (PID: 12224)
+[2026/3/14 10:56:56] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:56:56] [WARN] ComfyUI (绘梦引擎) 僵尸进程检测: PID 31216 已不存在，清理状态
+[2026/3/14 10:56:56] [INFO] ✓ ComfyUI (绘梦引擎) 已启动 (PID: 15704)
+[2026/3/14 10:56:56] [WARN] GPT-SoVITS (灵魂之声) 僵尸进程检测: PID 27344 已不存在，清理状态
+[2026/3/14 10:56:56] [INFO] ✓ GPT-SoVITS (灵魂之声) 已启动 (PID: 768)
+[2026/3/14 10:56:56] [WARN] NapCat QQ (通讯底座) 僵尸进程检测: PID 9952 已不存在，清理状态
+[2026/3/14 10:56:56] [INFO] ✓ NapCat QQ (通讯底座) 已启动 (PID: 25320)
+[2026/3/14 10:56:56] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:56:56] [WARN] gcli2api (GeminiCLI API 网关) 僵尸进程检测: PID 26200 已不存在，清理状态
+[2026/3/14 10:56:56] [INFO] ✓ gcli2api (GeminiCLI API 网关) 已启动 (PID: 16080)
+[2026/3/14 10:56:57] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6103/webui?token=8c1692d569c8
+
+[2026/3/14 10:56:57] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6103/webui?token=8c1692d569c8
+
+[2026/3/14 10:58:06] [INFO] NapCat QQ (通讯底座) 已在运行 (PID: 25320)
+[2026/3/14 10:58:07] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:58:24] [INFO] NapCat QQ (通讯底座) 已在运行 (PID: 25320)
+[2026/3/14 10:58:26] [INFO] ⏹ 正在停止 NapCat QQ (通讯底座) (PID: 25320)...
+[2026/3/14 10:58:27] [INFO] ✓ 已终止 NapCat QQ (通讯底座) 进程树
+[2026/3/14 10:58:27] [INFO] ✗ NapCat QQ (通讯底座) 退出 (code=1, signal=null, uptime=91s)
+[2026/3/14 10:58:29] [WARN] NapCat QQ (通讯底座) 僵尸进程检测: PID 25320 已不存在，清理状态
+[2026/3/14 10:58:29] [INFO] ✓ NapCat QQ (通讯底座) 已启动 (PID: 29596)
+[2026/3/14 10:58:30] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6103/webui?token=8c1692d569c8
+
+[2026/3/14 10:59:12] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 10:59:45] [INFO] ✗ NapCat QQ (通讯底座) 退出 (code=0, signal=null, uptime=76s)
+[2026/3/14 10:59:48] [WARN] NapCat QQ (通讯底座) 僵尸进程检测: PID 29596 已不存在，清理状态
+[2026/3/14 10:59:48] [INFO] ✓ NapCat QQ (通讯底座) 已启动 (PID: 28704)
+[2026/3/14 10:59:48] [INFO] 正在重启服务: napcat
+[2026/3/14 10:59:48] [INFO] ✗ NapCat QQ (通讯底座) 退出 (code=1, signal=null, uptime=0s)
+[2026/3/14 10:59:49] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6099/webui?token=8c1692d569c8
+
+[2026/3/14 10:59:49] [WARN] NapCat QQ (通讯底座) 僵尸进程检测: PID 28704 已不存在，清理状态
+[2026/3/14 10:59:49] [INFO] ✓ NapCat QQ (通讯底座) 已启动 (PID: 26000)
+[2026/3/14 10:59:50] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6100/webui?token=8c1692d569c8
+
+[2026/3/14 11:01:04] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:01:04] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:02:09] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:02:35] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 11:02:35] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:02:35] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 11:02:35] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:02:35] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 11:02:36] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:02:37] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:02:41] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 11:02:41] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:02:41] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:02:47] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:02:52] [INFO] 服务未运行，直接尝试启动: bridge
+[2026/3/14 11:02:52] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:03:20] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 11:03:20] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:03:20] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:04:21] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:07:19] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:07:36] [INFO] ⏹ 正在停止 OpenClaw Gateway (核心网关) (PID: 30224)...
+[2026/3/14 11:07:36] [INFO] ✓ 已终止 OpenClaw Gateway (核心网关) 进程树
+[2026/3/14 11:07:36] [INFO] ⏹ 正在停止 Memory Recorder (记忆晶石) (PID: 12224)...
+[2026/3/14 11:07:36] [INFO] ✓ 已终止 Memory Recorder (记忆晶石) 进程树
+[2026/3/14 11:07:36] [INFO] ⏹ 正在停止 Sideria Embedding Server (向量服务) (PID: null)...
+[2026/3/14 11:07:36] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:07:36] [INFO] ⏹ 正在停止 ComfyUI (绘梦引擎) (PID: 15704)...
+[2026/3/14 11:07:36] [INFO] ✓ 已终止 ComfyUI (绘梦引擎) 进程树
+[2026/3/14 11:07:36] [INFO] ⏹ 正在停止 GPT-SoVITS (灵魂之声) (PID: 768)...
+[2026/3/14 11:07:36] [INFO] ✓ 已终止 GPT-SoVITS (灵魂之声) 进程树
+[2026/3/14 11:07:36] [INFO] ⏹ 正在停止 NapCat QQ (通讯底座) (PID: 26000)...
+[2026/3/14 11:07:36] [INFO] ✓ 已终止 NapCat QQ (通讯底座) 进程树
+[2026/3/14 11:07:36] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 11:07:37] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:07:37] [INFO] ⏹ 正在停止 gcli2api (GeminiCLI API 网关) (PID: 16080)...
+[2026/3/14 11:07:37] [INFO] ✓ 已终止 gcli2api (GeminiCLI API 网关) 进程树
+[2026/3/14 11:07:37] [INFO] ✗ OpenClaw Gateway (核心网关) 退出 (code=1, signal=null, uptime=641s)
+[2026/3/14 11:07:37] [INFO] ✗ Memory Recorder (记忆晶石) 退出 (code=1, signal=null, uptime=641s)
+[2026/3/14 11:07:37] [INFO] ✗ ComfyUI (绘梦引擎) 退出 (code=1, signal=null, uptime=641s)
+[2026/3/14 11:07:37] [INFO] ✗ GPT-SoVITS (灵魂之声) 退出 (code=1, signal=null, uptime=641s)
+[2026/3/14 11:07:37] [INFO] ✗ NapCat QQ (通讯底座) 退出 (code=1, signal=null, uptime=467s)
+[2026/3/14 11:07:37] [INFO] ✗ gcli2api (GeminiCLI API 网关) 退出 (code=1, signal=null, uptime=641s)
+[2026/3/14 11:11:57] [WARN] OpenClaw Gateway (核心网关) 僵尸进程检测: PID 30224 已不存在，清理状态
+[2026/3/14 11:11:57] [INFO] 已停止 Gateway 计划任务
+[2026/3/14 11:11:57] [INFO] ✓ OpenClaw Gateway (核心网关) 已启动 (PID: 21392)
+[2026/3/14 11:11:57] [WARN] Memory Recorder (记忆晶石) 僵尸进程检测: PID 12224 已不存在，清理状态
+[2026/3/14 11:11:57] [INFO] ✓ Memory Recorder (记忆晶石) 已启动 (PID: 27160)
+[2026/3/14 11:11:57] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:11:57] [WARN] ComfyUI (绘梦引擎) 僵尸进程检测: PID 15704 已不存在，清理状态
+[2026/3/14 11:11:57] [INFO] ✓ ComfyUI (绘梦引擎) 已启动 (PID: 3604)
+[2026/3/14 11:11:57] [WARN] GPT-SoVITS (灵魂之声) 僵尸进程检测: PID 768 已不存在，清理状态
+[2026/3/14 11:11:57] [INFO] ✓ GPT-SoVITS (灵魂之声) 已启动 (PID: 11712)
+[2026/3/14 11:11:57] [WARN] NapCat QQ (通讯底座) 僵尸进程检测: PID 26000 已不存在，清理状态
+[2026/3/14 11:11:57] [INFO] ✓ NapCat QQ (通讯底座) 已启动 (PID: 20816)
+[2026/3/14 11:11:57] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:11:57] [WARN] gcli2api (GeminiCLI API 网关) 僵尸进程检测: PID 16080 已不存在，清理状态
+[2026/3/14 11:11:57] [INFO] ✓ gcli2api (GeminiCLI API 网关) 已启动 (PID: 29460)
+[2026/3/14 11:11:58] [IMPORTANT] 
+🔔 [NapCat Login] 请访问以下地址登录 QQ:
+👉 http://127.0.0.1:6100/webui?token=8c1692d569c8
+
+[2026/3/14 11:12:56] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:12:56] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:14:27] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:14:27] [INFO] Sideria Embedding Server (向量服务) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:17:16] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:17:24] [INFO] ⏹ 正在停止 Bridge (全知链路) (PID: null)...
+[2026/3/14 11:17:24] [ERROR] 停止失败: kill ESRCH
+[2026/3/14 11:17:36] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
+[2026/3/14 11:24:32] [INFO] ⏹ 正在停止 gcli2api (GeminiCLI API 网关) (PID: 29460)...
+[2026/3/14 11:24:33] [INFO] ✓ 已终止 gcli2api (GeminiCLI API 网关) 进程树
+[2026/3/14 11:24:33] [INFO] ✗ gcli2api (GeminiCLI API 网关) 退出 (code=1, signal=null, uptime=756s)
+[2026/3/14 11:24:35] [WARN] gcli2api (GeminiCLI API 网关) 僵尸进程检测: PID 29460 已不存在，清理状态
+[2026/3/14 11:24:35] [INFO] ✓ gcli2api (GeminiCLI API 网关) 已启动 (PID: 20364)
+[2026/3/14 11:41:31] [INFO] Bridge (全知链路) 正在等待退避重启，跳过重复启动
